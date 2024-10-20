@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+  control:
+    image: ubuntu:20.04
+    hostname: control
+    volumes:
+      - ./shared:/shared
+    networks:
+      - lab_net
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get install -y openssh-server sudo &&
+        echo 'root:password' | chpasswd &&
+        sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config &&
+        service ssh start &&
+        tail -f /dev/null
+      "
+
+  node1:
+    image: ubuntu:20.04
+    hostname: node1
+    networks:
+      - lab_net
+    ports:
+      - "7001-7003:8001-8003"
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get install -y openssh-server sudo &&
+        echo 'root:password' | chpasswd &&
+        sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config &&
+        service ssh start &&
+        tail -f /dev/null
+      "
+
+  node2:
+    image: ubuntu:20.04
+    hostname: node2
+    networks:
+      - lab_net
+    ports:
+      - "8001-8003:8001-8003"
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get install -y openssh-server sudo &&
+        echo 'root:password' | chpasswd &&
+        sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config &&
+        service ssh start &&
+        tail -f /dev/null
+      "
+
+  node3:
+    image: ubuntu:20.04
+    hostname: node3
+    networks:
+      - lab_net
+    ports:
+      - "9001-9003:8001-8003"
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get install -y openssh-server sudo &&
+        echo 'root:password' | chpasswd &&
+        sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config &&
+        service ssh start &&
+        tail -f /dev/null
+      "
+
+networks:
+  lab_net:
+    driver: bridge
